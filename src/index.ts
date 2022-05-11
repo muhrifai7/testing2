@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(getLanguage);
 
-// app.use("/", routes);
+app.use("/", routes);
 
 app.use("/", (req, res) => res.send(`okdddddde ${port}`));
 
