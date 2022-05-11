@@ -7,5 +7,5 @@ const port = process.env.PORT || 4000;
 app.use("/", (req, res) => res.send(`oke ${port}`));
 
 app.listen(port, () => {
-  console.log(`Server running  on port ${port}`);
+  console.log(`Server runnings  on port ${port}`);
 });
