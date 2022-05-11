@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node .",
+    "deploy": "git add . && git commit -m Heroku && git push heroku main",
     "build": "tsc",
     "dev": "nodemon"
   },
