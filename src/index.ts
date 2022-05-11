@@ -20,8 +20,6 @@ app.use(getLanguage);
 
 app.use("/", routes);
 
-app.use("/", (req, res) => res.send(`okdddddde ${port}`));
-
 app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
