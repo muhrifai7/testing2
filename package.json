@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "node .",
-    "deploy": "git add . && git commit -m Heroku && git push && git push && heroku main",
     "build": "tsc",
     "dev": "nodemon"
   },
@@ -23,7 +22,6 @@
     "typescript": "^4.1.3"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "ejs": "^3.1.5",
     "express": "^4.17.1"
   },
