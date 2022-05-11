@@ -8,15 +8,15 @@ import cors from "cors";
 import express from "express";
 
 import { errorHandler } from "./middleware/errorHandler";
-import { getLanguage } from "./middleware/getLanguage";
-import routes from "./routes";
+// import { getLanguage } from "./middleware/getLanguage";
+// import routes from "./routes";
 // import { dbCreateConnection } from "./typeorm/dbCreateConnection";
 
 export const app = express();
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(getLanguage);
+// app.use(cors());
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(getLanguage);
 
 // app.use("/", routes);
 
