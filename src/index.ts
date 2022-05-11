@@ -20,7 +20,7 @@ export const app = express();
 
 // app.use("/", routes);
 
-app.use("/", (req, res) => res.send(`oke ${port}`));
+app.use("/", (req, res) => res.send(`okdddddde ${port}`));
 
 app.use(errorHandler);
 
