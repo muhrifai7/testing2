@@ -18,7 +18,14 @@ export const register = async (
   const roleRepository = getRepository(Role);
   const salariesRepository = getRepository(Salaries);
 
-  const { email, password, role_name = "STAFF", departmentId } = req.body;
+  const {
+    email,
+    password,
+    role_name = "STAFF",
+    departmentId,
+    name,
+    nip,
+  } = req.body;
   try {
     const user = await userRepository.findOne({ where: { email } });
     if (user) {
@@ -49,6 +56,8 @@ export const register = async (
       newUser.role_name = role_name;
       newUser.password = password;
       newUser.department_id = departmentId;
+      newUser.username = name;
+      newUser.nip = nip;
       newUser.hashPassword();
       const dataUser = await userRepository.save(newUser);
       await profileRepository.save({
