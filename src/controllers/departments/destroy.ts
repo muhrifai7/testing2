@@ -19,16 +19,18 @@ export const destroy = async (
       ]);
       return next(customError);
     }
-    console.log(department, "departmentdepartment");
-    departmentRepository.delete(id);
-    // res.customSuccess(200, 'User successfully deleted.', { id: user.id, name: user.name, email: user.email });
-    return res
-      .status(200)
-      .json({
+
+    try {
+      departmentRepository.delete(id);
+      return res.status(200).json({
         status: 200,
         message: "Department successfully deleted.",
         responseData: { id: department.id, name: department.name },
       });
+    } catch (error) {
+      const customeError = new CustomError(400, "Raw", "Error", null, error);
+      return next(customeError);
+    }
   } catch (error) {
     const customeError = new CustomError(400, "Raw", "Error", null, error);
     return next(customeError);
