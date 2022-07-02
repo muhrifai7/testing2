@@ -15,7 +15,7 @@ import { Role } from "../roles/Role";
 import { Profile } from "../profile/Profile";
 import { Department } from "../department/Department";
 import { Modules } from "../modules/Modules";
-import { EmailBlast } from "../emailBlast/EmailBlast";
+// import { EmailBlast } from "../emailBlast/EmailBlast";
 import { Attendance } from "./../attendance/Attendance";
 import { Payroll } from "./../payroll/Payroll";
 import { RoleType, Language } from "./userTypes";
@@ -132,8 +132,8 @@ export class TU_USER {
   // @OneToMany(() => Payroll, (payroll) => payroll.id)
   // payroll!: Payroll[];
 
-  @OneToMany(() => EmailBlast, (email) => email.user)
-  emailBlast!: EmailBlast[];
+  // @OneToMany(() => EmailBlast, (email) => email.user)
+  // emailBlast!: EmailBlast[];
 
   @OneToMany(() => Attendance, (attendance) => attendance.user)
   attendance!: Attendance;
