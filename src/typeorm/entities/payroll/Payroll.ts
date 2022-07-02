@@ -15,10 +15,14 @@ export class Payroll {
   @PrimaryGeneratedColumn()
   id!: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   totalPay!: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   paidDate!: string;
 
   @Column()
