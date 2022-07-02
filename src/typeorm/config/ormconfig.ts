@@ -15,9 +15,6 @@ const config: any = {
   entities: ["dist/typeorm/entities/**/*.js"],
   migrations: ["dist/typeorm/migrations/**/*.js"],
   subscribers: ["dist/typeorm/subscriber/**/*.js"],
-  // entities: [`${process.env.DATABASE_ENTITIES}`],
-  // migrations: [`${process.env.DATABASE_MIGRATIONS}`],
-  // cli: { migrationsDir: `${process.env.DATABASE_MIGRATIONS_DIR}` },
   cli: {
     entitiesDir: "dist/typeorm/entities",
     migrationsDir: "dist/typeorm/migrations",
@@ -26,7 +23,7 @@ const config: any = {
   ssl: {
     rejectUnauthorized: false,
   },
-  // namingStrategy: new SnakeNamingStrategy(),
+  namingStrategy: new SnakeNamingStrategy(),
   // },
   // development: {
   // type: "postgres",
