@@ -19,7 +19,7 @@ export const show_by_id = async (
         "role",
         "department",
         "module",
-        "emailBlast",
+        // "emailBlast",
         "salaries",
         "userTax",
       ],

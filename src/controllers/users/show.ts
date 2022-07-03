@@ -27,7 +27,7 @@ export const show = async (
         "role",
         "department",
         "module",
-        "emailBlast",
+        // "emailBlast",
         "salaries",
         "userTax",
       ],
