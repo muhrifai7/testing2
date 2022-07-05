@@ -102,6 +102,17 @@ export const edit = async (
       ...(salaries.pphAllowance && { pphAllowance: salaries.pphAllowance }),
       ...(salaries.bpjsAllowance && { bpjsAllowance: salaries.bpjsAllowance }),
       ...(salaries.loanDeduction && { loanDeduction: salaries.loanDeduction }),
+      ...(salaries.bpjsDeduction && { bpjsDeduction: salaries.bpjsDeduction }),
+      ...(salaries.deductionJkn && { deductionJkn: salaries.deductionJkn }),
+      ...(salaries.deductionJk && { deductionJk: salaries.deductionJk }),
+      ...(salaries.deductionJht && { deductionJht: salaries.deductionJht }),
+      ...(salaries.deductionJht1 && { deductionJht1: salaries.deductionJht1 }),
+      ...(salaries.deductionPension && {
+        deductionPension: salaries.deductionPension,
+      }),
+      ...(salaries.deductionPension1 && {
+        deductionPension1: salaries.deductionPension1,
+      }),
       ...(salaries.updated_by && { updated_by: salaries.updated_by }),
     };
     const newProfile = {

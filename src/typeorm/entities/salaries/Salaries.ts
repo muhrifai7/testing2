@@ -106,6 +106,42 @@ export class Salaries {
   })
   loanDeduction!: number;
 
+  // add 2022-07-05 potongan
+  @Column({
+    nullable: true,
+  })
+  bpjsDeduction!: number;
+
+  @Column({
+    nullable: true,
+  })
+  deductionJkn!: number;
+
+  @Column({
+    nullable: true,
+  })
+  deductionJk!: number;
+
+  @Column({
+    nullable: true,
+  })
+  deductionJht!: number;
+
+  @Column({
+    nullable: true,
+  })
+  deductionJht1!: number;
+
+  @Column({
+    nullable: true,
+  })
+  deductionPension!: number;
+
+  @Column({
+    nullable: true,
+  })
+  deductionPension1!: number;
+
   @Column({
     nullable: true,
   })
