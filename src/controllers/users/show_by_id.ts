@@ -29,7 +29,10 @@ export const show_by_id = async (
         404,
         "General",
         `User with id:${id} not found.`,
-        ["User not found."]
+        {
+          code: 404,
+          message: "User not found.",
+        }
       );
       return next(customError);
     }

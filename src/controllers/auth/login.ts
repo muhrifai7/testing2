@@ -19,16 +19,18 @@ export const login = async (
     const user = await userRepository.findOne({ where: { email } });
 
     if (!user) {
-      const customError = new CustomError(404, "General", "Not Found", [
-        "Email not found",
-      ]);
+      const customError = new CustomError(404, "Unauthorized", "Not Found", {
+        code: 403,
+        message: "Email not found",
+      });
       return next(customError);
     }
 
     if (!user.checkIfPasswordMatch(password)) {
-      const customError = new CustomError(404, "General", "Not Found", [
-        "Incorrect email or password",
-      ]);
+      const customError = new CustomError(404, "Unauthorized", "Not Found", {
+        code: 404,
+        message: "Incorrect Password",
+      });
       return next(customError);
     }
 
@@ -43,13 +45,11 @@ export const login = async (
     try {
       const accessToken = createJwtToken(jwtPayload);
       // res.customSuccess(200, 'Token successfully created.', `Bearer ${token}`);
-      return res
-        .status(200)
-        .json({
-          status: 200,
-          message: "Token successfully created.",
-          responseData: { accessToken },
-        });
+      return res.status(200).json({
+        status: 200,
+        message: "Token successfully created.",
+        responseData: { accessToken },
+      });
     } catch (err) {
       console.log(err);
       const customError = new CustomError(
@@ -62,7 +62,10 @@ export const login = async (
       return next(customError);
     }
   } catch (err) {
-    const customError = new CustomError(400, "Raw", "Error", null, err);
+    const customError = new CustomError(404, "Unauthorized", "Not Found", {
+      code: 404,
+      message: "Error network",
+    });
     return next(customError);
   }
 };

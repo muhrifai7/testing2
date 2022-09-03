@@ -17,16 +17,18 @@ export const changePassword = async (
     const user = await userRepository.findOne({ where: { id } });
 
     if (!user) {
-      const customError = new CustomError(404, "General", "Not Found", [
-        `User ${username} not found.`,
-      ]);
+      const customError = new CustomError(404, "General", "Not Found", {
+        code: 404,
+        message: `${username} not found`,
+      });
       return next(customError);
     }
 
     if (!user.checkIfPasswordMatch(password)) {
-      const customError = new CustomError(400, "General", "Not Found", [
-        "Incorrect password",
-      ]);
+      const customError = new CustomError(400, "General", "Not Found", {
+        code: 404,
+        message: "Incorrect Password",
+      });
       return next(customError);
     }
 
@@ -38,7 +40,6 @@ export const changePassword = async (
       .status(200)
       .json({ status: 200, message: "Password successfully changed." });
   } catch (err) {
-    console.log(err, "errerrerrerr");
     const customError = new CustomError(401, "Raw", "Error", null, err);
     return next(customError);
   }

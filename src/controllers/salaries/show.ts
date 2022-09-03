@@ -25,7 +25,10 @@ export const show = async (
         404,
         "General",
         `Salaries with id:${id} not found.`,
-        ["Salaries not found."]
+        {
+          code: 401,
+          message: `Data doesn't exists.`,
+        }
       );
       return next(customError);
     }

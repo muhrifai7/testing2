@@ -12,17 +12,35 @@ const config: any = {
   database: process.env.POSTGRES_DB,
   synchronize: true,
   logging: false,
-  entities: ["dist/typeorm/entities/**/*.js"],
-  migrations: ["dist/typeorm/migrations/**/*.js"],
-  subscribers: ["dist/typeorm/subscriber/**/*.js"],
+  entities:
+    process.env.NODE_ENV == "development"
+      ? ["src/typeorm/entities/**/*.ts"]
+      : ["dist/typeorm/entities/**/*.js"],
+  migrations:
+    process.env.NODE_ENV == "development"
+      ? ["src/typeorm/migrations/**/*.ts"]
+      : ["dist/typeorm/migrations/**/*.js"],
+  subscribers:
+    process.env.NODE_ENV == "development"
+      ? ["src/typeorm/subscriber/**/*.ts"]
+      : ["dist/typeorm/subscriber/**/*.js"],
   cli: {
-    entitiesDir: "dist/typeorm/entities",
-    migrationsDir: "dist/typeorm/migrations",
-    subscribersDir: "dist/typeorm/subscriber",
+    entitiesDir:
+      process.env.NODE_ENV == "development"
+        ? "src/typeorm/entities/**/*.ts"
+        : "dist/typeorm/entities",
+    migrationsDir:
+      process.env.NODE_ENV == "development"
+        ? "src/typeorm/migrations"
+        : "dist/typeorm/migrations",
+    subscribersDir:
+      process.env.NODE_ENV == "development"
+        ? "src/typeorm/subscriber"
+        : "dist/typeorm/subscriber",
   },
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  // ssl: {
+  //   rejectUnauthorized: false,
+  // },
   namingStrategy: new SnakeNamingStrategy(),
   // },
   // development: {

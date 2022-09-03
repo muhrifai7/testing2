@@ -13,6 +13,10 @@ export const list = async (
   const { limit = 10, page = 1, keyword = "" } = req.query;
   const offset = ((limit as number) * ((page as number) - 1)) as number;
   const userRepository = getRepository(TU_USER);
+  // let resss = await userRepository.query(
+  //   "UPDATE salaries set overtime = 7000 where user_id = 91"
+  // );
+  // console.log(resss[1] ? "ddd" : "dddsssss");
   try {
     const [result, count] = await userRepository
       .createQueryBuilder("TU_USER")
@@ -21,9 +25,10 @@ export const list = async (
       .orderBy("TU_USER.username", "ASC")
       .getManyAndCount();
     if (!result) {
-      const customError = new CustomError(404, "General", `User not found.`, [
-        "Data not found.",
-      ]);
+      const customError = new CustomError(404, "General", `User not found.`, {
+        code: 404,
+        message: "Data not found",
+      });
       return next(customError);
     }
     const response = {

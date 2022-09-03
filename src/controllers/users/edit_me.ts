@@ -13,6 +13,8 @@ export const edit_me = async (
   res: Response | any,
   next: NextFunction
 ) => {
+  console.log("dsadasdasd");
+  /*
   const { id } = req.jwtPayload;
   const { body } = req;
   const userRepository = getRepository(TU_USER);
@@ -28,7 +30,10 @@ export const edit_me = async (
         404,
         "General",
         `User with id:${id} not found.`,
-        ["User not found."]
+        {
+          code: 404,
+          message: "User not found.",
+        }
       );
       return next(customError);
     }
@@ -80,4 +85,5 @@ export const edit_me = async (
     const customeError = new CustomError(400, "Raw", "Error", null, error);
     return next(customeError);
   }
+  */
 };

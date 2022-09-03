@@ -43,7 +43,10 @@ export const create = async (
         400,
         "General",
         "User already exists",
-        [`Email '${user.email}' already exists`]
+        {
+          code: 404,
+          message: `Email '${user.email}' already exists`,
+        }
       );
       return next(customError);
     }
@@ -54,15 +57,17 @@ export const create = async (
         400,
         "General",
         "Role does not exists",
-        [`not exists`]
+        {
+          code: 404,
+          message: "Role does not exists",
+        }
       );
       return next(customError);
     }
     try {
       const newUser = new TU_USER();
       newUser.email = email;
-      newUser.account_number= accountNumber,
-      newUser.username = username;
+      (newUser.account_number = accountNumber), (newUser.username = username);
       newUser.basicSalary = basicSalary;
       newUser.nik = nik;
       newUser.role_id = getRole.id;

@@ -7,6 +7,8 @@ import { CustomError } from "../../utils/response/custom-error/CustomError";
 import { customResult } from "../../utils/response/custom-success/customResult";
 import { Salaries } from "../../typeorm/entities/salaries/Salaries";
 import { Role } from "../../typeorm/entities/roles/Role";
+import { upload_file } from "../../utils/helper";
+import { exit } from "process";
 // edit by id
 export const edit = async (
   req: Request,
@@ -24,6 +26,7 @@ export const edit = async (
     departmentId,
     profile,
     salaries,
+    path = "profile",
   } = req.body;
   let {
     placeOfBirth,
@@ -49,88 +52,105 @@ export const edit = async (
         404,
         "General",
         `User with id:${id} not found.`,
-        ["User not found."]
+        {
+          code: 404,
+          message: `User doesn't exists.`,
+        }
       );
       return next(customError);
     }
 
     const getRole = await roleRepository.findOne({ where: { name: roleName } });
-    if (!getRole) {
+    if (!getRole || !departmentId) {
       const customError = new CustomError(
         400,
         "General",
         "Role does not exists",
-        [`not exists`]
+        {
+          code: 404,
+          message: `Role doesn't exists.`,
+        }
       );
       return next(customError);
     }
-
     // optional;
     const newSalaries = {
       basicSalaries: basicSalary,
-      ...(salaries.totalSalaries && { totalSalaries: salaries.totalSalaries }),
+      totalSalaries: salaries?.totalSalaries ? salaries.totalSalaries : null,
       ...(salaries.overtime && { overtime: salaries.overtime }),
-      ...(salaries.professionalAllowance && {
-        professionalAllowance: salaries.professionalAllowance,
-      }),
-      ...(salaries.healthAllowance && {
-        healthAllowance: salaries.healthAllowance,
-      }),
-      ...(salaries.mealAllowance && { mealAllowance: salaries.mealAllowance }),
-      ...(salaries.positionalAllowance && {
-        positionalAllowance: salaries.positionalAllowance,
-      }),
-      ...(salaries.transportationAllowance && {
-        transportationAllowance: salaries.transportationAllowance,
-      }),
-      ...(salaries.operatorAllowance && {
-        operatorAllowance: salaries.operatorAllowance,
-      }),
-      ...(salaries.healthSubsidyBpjs && {
-        healthSubsidyBpjs: salaries.healthSubsidyBpjs,
-      }),
-      ...(salaries.taktisAllowance && {
-        taktisAllowance: salaries.taktisAllowance,
-      }),
-      ...(salaries.performanceAllowance && {
-        performanceAllowance: salaries.performanceAllowance,
-      }),
-      ...(salaries.serviceAllowance && {
-        serviceAllowance: salaries.serviceAllowance,
-      }),
-      ...(salaries.pphDeduction && { pphDeduction: salaries.pphDeduction }),
-      ...(salaries.pphAllowance && { pphAllowance: salaries.pphAllowance }),
-      ...(salaries.bpjsAllowance && { bpjsAllowance: salaries.bpjsAllowance }),
-      ...(salaries.loanDeduction && { loanDeduction: salaries.loanDeduction }),
-      ...(salaries.bpjsDeduction && { bpjsDeduction: salaries.bpjsDeduction }),
-      ...(salaries.deductionJkn && { deductionJkn: salaries.deductionJkn }),
-      ...(salaries.deductionJk && { deductionJk: salaries.deductionJk }),
-      ...(salaries.deductionJht && { deductionJht: salaries.deductionJht }),
-      ...(salaries.deductionJht1 && { deductionJht1: salaries.deductionJht1 }),
-      ...(salaries.deductionPension && {
-        deductionPension: salaries.deductionPension,
-      }),
-      ...(salaries.deductionPension1 && {
-        deductionPension1: salaries.deductionPension1,
-      }),
-      ...(salaries.updated_by && { updated_by: salaries.updated_by }),
+      professionalAllowance: salaries?.professionalAllowance
+        ? salaries?.professionalAllowance
+        : null,
+      healthAllowance: salaries.healthAllowance
+        ? salaries.healthAllowance
+        : null,
+      mealAllowance: salaries.mealAllowance ? salaries.mealAllowance : null,
+      positionalAllowance: salaries.positionalAllowance
+        ? salaries.positionalAllowance
+        : null,
+      transportationAllowance: salaries.transportationAllowance
+        ? salaries.transportationAllowance
+        : null,
+      operatorAllowance: salaries.operatorAllowance
+        ? salaries.operatorAllowance
+        : null,
+      healthSubsidyBpjs: salaries.healthSubsidyBpjs
+        ? salaries.healthSubsidyBpjs
+        : null,
+      taktisAllowance: salaries.taktisAllowance
+        ? salaries.taktisAllowance
+        : null,
+      performanceAllowance: salaries.performanceAllowance
+        ? salaries.performanceAllowance
+        : null,
+      serviceAllowance: salaries.serviceAllowance
+        ? salaries.serviceAllowance
+        : null,
+      pphDeduction: salaries.pphDeduction ? salaries.pphDeduction : null,
+      pphAllowance: salaries.pphAllowance ? salaries.pphAllowance : null,
+      bpjsAllowance: salaries.bpjsAllowance ? salaries.bpjsAllowance : null,
+      loanDeduction: salaries.loanDeduction ? salaries.loanDeduction : null,
+      bpjsDeduction: salaries.bpjsDeduction ? salaries.bpjsDeduction : null,
+      deductionJkn: salaries.deductionJkn ? salaries.deductionJkn : null,
+      deductionJk: salaries.deductionJk ? salaries.deductionJk : null,
+      deductionJht: salaries.deductionJht ? salaries.deductionJht : null,
+      deductionJht1: salaries.deductionJht1 ? salaries.deductionJht1 : null,
+      deductionPension: salaries.deductionPension
+        ? salaries.deductionPension
+        : null,
+      deductionPension1: salaries.deductionPension1
+        ? salaries.deductionPension1
+        : null,
+      updated_by: salaries.updated_by ? salaries.updated_by : "Admin",
     };
+    // upload foto
+    let response_upload_file = await upload_file(username, path, photo);
+    console.log(response_upload_file, "response_upload_file");
+    if (response_upload_file?.status != 200) {
+      const customError = new CustomError(
+        404,
+        "Unauthorized",
+        "Failed upload",
+        {
+          code: 403,
+          message: "Images failed upload",
+        }
+      );
+      return next(customError);
+    }
+    let base64: string = response_upload_file?.data;
     const newProfile = {
-      ...(placeOfBirth && {
-        placeOfBirth: placeOfBirth,
-      }),
-      ...(dateOfBirth && { dateOfBirth: dateOfBirth }),
-      ...(gender && { gender: gender }),
-      ...(religion && { religion: religion }),
-      ...(academic && { academic: academic }),
-      ...(title && { title: title }),
-      ...(address && { address: address }),
-      ...(city && { city: city }),
-      ...(country && { country: country }),
-      ...(postalCode && {
-        postalCode: postalCode,
-      }),
-      ...(photo && { photo: photo }),
+      placeOfBirth: placeOfBirth ? placeOfBirth : "",
+      dateOfBirth: dateOfBirth ? dateOfBirth : "",
+      gender: gender ? gender : "",
+      religion: religion ? religion : "",
+      academic: academic ? academic : "",
+      title: title ? title : "",
+      address: address ? address : "",
+      city: city ? city : "",
+      country: country ? country : "",
+      postalCode: postalCode ? postalCode : "",
+      photo: base64 ? base64 : "",
     };
     try {
       await salariesRepository
@@ -146,14 +166,14 @@ export const edit = async (
         .where("user_id = :user_id", { user_id: id as any })
         .execute();
       await userRepository.update(id, {
-        ...(username && { username: username }),
-        ...(nik && !user.nik && { nik: nik }),
-        ...(isActive && { isActive: isActive }),
-        ...(roleName && { role_name: roleName }),
-        ...(basicSalary && { basicSalary: basicSalary }),
-        ...(getRole && { role_id: getRole.id }),
-        ...(accountNumber && { account_number: accountNumber }),
-        ...(departmentId && { department_id: departmentId }),
+        username: username ? username : "",
+        nik: nik ? nik : "",
+        isActive: isActive ? isActive : "",
+        role_name: roleName ? roleName : "",
+        basicSalary: basicSalary ? basicSalary : "",
+        role_id: getRole.id,
+        account_number: accountNumber ? accountNumber : "",
+        department_id: departmentId ? departmentId : "",
       });
 
       // res.customSuccess(200, 'User successfully saved.');

@@ -33,7 +33,10 @@ export const register = async (
         400,
         "General",
         "User already exists",
-        [`Email '${user.email}' already exists`]
+        {
+          code: 401,
+          message: `${user.email} already exists`,
+        }
       );
       return next(customError);
     }
@@ -44,7 +47,10 @@ export const register = async (
         400,
         "General",
         "Role does not exists",
-        [`not exists`]
+        {
+          code: 404,
+          message: `Role does not exists`,
+        }
       );
       return next(customError);
     }
@@ -77,7 +83,10 @@ export const register = async (
         400,
         "Raw",
         `User '${email}' can't be created`,
-        null,
+        {
+          code: 404,
+          message: `user can't be created`,
+        },
         err
       );
       return next(customError);

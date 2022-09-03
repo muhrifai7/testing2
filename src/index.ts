@@ -24,7 +24,7 @@ app.use(errorHandler);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
-  console.log(`Server running tetete  on port ${port}`);
+  console.log(`Microservice runs on port ${port}`);
 });
 
 (async () => {

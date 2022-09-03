@@ -21,9 +21,11 @@ export const destroy = async (
       relations: ["profile"],
     });
     if (!user) {
-      const customError = new CustomError(404, "General", "Not Found", [
-        `User with id:${id} doesn't exists.`,
-      ]);
+      const customError = new CustomError(404, "General", "Not Found", {
+        code: 404,
+        message: `User with id:${id} doesn't exists.`,
+      });
+
       return next(customError);
     }
 

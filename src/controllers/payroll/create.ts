@@ -3,6 +3,7 @@ import moment from "moment";
 import { getRepository } from "typeorm";
 
 import { Payroll } from "../../typeorm/entities/payroll/Payroll";
+import { Salaries } from "../../typeorm/entities/salaries/Salaries";
 import { CustomError } from "../../utils/response/custom-error/CustomError";
 import { customResult } from "../../utils/response/custom-success/customResult";
 
@@ -12,7 +13,9 @@ export const create = async (
   next: NextFunction
 ) => {
   const payrollRepository = getRepository(Payroll);
+  const salariesRepository = getRepository(Salaries);
   try {
+    // todo salariesId == user_id
     let { salariesId, created_by, paidDate, totalPay } = req.body;
 
     // validasi salaries id dan paid date terdapat pembayaran dibulan yang sama atau tidak
@@ -33,23 +36,55 @@ export const create = async (
       })
       .getOne();
 
-    //   return next(res.status(200).send((customResult(200,"success",payroll))));
-    console.log("result", result);
     if (result) {
       const customError = new CustomError(
         400,
         "General",
         "payroll already exists",
-        [`Payroll '${result.paidDate}' already paid`]
+        {
+          code: 401,
+          message: `Payroll '${result.paidDate}' already paid`,
+        }
       );
       return next(customError);
     }
     // jika tidak lolos/jika ada stop
+    const salariesResult = await salariesRepository.findOne({
+      select: [
+        "basicSalaries",
+        "totalSalaries",
+        "overtime",
+        "professionalAllowance",
+        "healthAllowance",
+        "mealAllowance",
+        "positionalAllowance",
+        "transportationAllowance",
+        "operatorAllowance",
+        "healthSubsidyBpjs",
+        "taktisAllowance",
+        "performanceAllowance",
+        "serviceAllowance",
+        "pphDeduction",
+        "pphAllowance",
+        "bpjsAllowance",
+        "loanDeduction",
+        "bpjsDeduction",
+        "deductionJkn",
+        "deductionJk",
+        "deductionJht",
+        "deductionJht1",
+        "deductionPension",
+        "deductionPension1",
+      ],
+      where: { user_id: salariesId },
+    });
     const newData = {
       salaries_id: salariesId,
+      ...salariesResult,
       created_by,
       paidDate,
       totalPay,
+      user_id: salariesId,
     };
     await payrollRepository.save(newData);
     // return res.customSuccess(200, 'User successfully saved.');

@@ -14,9 +14,10 @@ export const destroy = async (
   try {
     const department = await departmentRepository.findOne({ where: { id } });
     if (!department) {
-      const customError = new CustomError(404, "General", "Not Found", [
-        `department with id:${id} doesn't exists.`,
-      ]);
+      const customError = new CustomError(404, "General", "Not Found", {
+        code: 401,
+        message: `department with id:${id} doesn't exists.`,
+      });
       return next(customError);
     }
 
