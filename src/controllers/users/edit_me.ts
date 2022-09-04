@@ -5,7 +5,7 @@ import { TU_USER } from "../../typeorm/entities/users/User";
 import { Profile } from "../../typeorm/entities/profile/Profile";
 import { CustomError } from "../../utils/response/custom-error/CustomError";
 import { customResult } from "../../utils/response/custom-success/customResult";
-
+import { upload_file } from "../../utils/helper";
 // edit by token for user
 // only can change profile user/me
 export const edit_me = async (
@@ -13,10 +13,18 @@ export const edit_me = async (
   res: Response | any,
   next: NextFunction
 ) => {
-  console.log("dsadasdasd");
-  /*
   const { id } = req.jwtPayload;
-  const { body } = req;
+  const {
+    username,
+    nip,
+    nik,
+    isActive = true,
+    roleName,
+    basicSalary,
+    departmentId,
+    dataProfile,
+    path = "profile",
+  } = req.body;
   const userRepository = getRepository(TU_USER);
   const profileRepositoy = getRepository(Profile);
   try {
@@ -39,33 +47,51 @@ export const edit_me = async (
     }
 
     try {
-      console.log(body, "bodybody");
+      let base64 = dataProfile?.photo;
+      let validation_photo = base64.split("/")[0];
+      if (validation_photo != "images") {
+        let response_upload_file = await upload_file(username, path, base64);
+
+        if (response_upload_file?.status != 200) {
+          const customError = new CustomError(
+            404,
+            "Unauthorized",
+            "Failed upload",
+            {
+              code: 403,
+              message: "Images failed upload",
+            }
+          );
+          return next(customError);
+        }
+        base64 = response_upload_file?.data;
+      }
+
       await userRepository.update(id, {
-        ...(body.username && { username: body.username }),
-        ...(body.nip && !user.nip && { nip: body.nip }),
-        ...(body.isActive && { isActive: body.isActive }),
-        ...(body.role_name && { role_name: body.roleName }),
-        ...(body.basicSalary && { basicSalary: body.basicSalary }),
-        ...(body.department && { department_id: body.departmentId }),
+        username: username ? username : "",
+        nip: nip ? nip : "",
+        nik: nik ? nik : "",
+        isActive: isActive ? isActive : "",
+        role_name: roleName ? roleName : "",
+        basicSalary: basicSalary ? basicSalary : "",
+        department_id: departmentId ? departmentId : "",
       });
-      const { dataProfile } = body;
+
       await profileRepositoy.update(
         { user_id: id },
         {
-          ...(dataProfile.placeOfBirth && {
-            placeOfBirth: dataProfile?.placeOfBirth,
-          }),
-          ...(dataProfile.gender && { gender: dataProfile?.gender }),
-          ...(dataProfile.religion && { religion: dataProfile?.religion }),
-          ...(dataProfile.academic && { academic: dataProfile?.academic }),
-          ...(dataProfile.title && { title: dataProfile?.title }),
-          ...(dataProfile.address && { address: dataProfile?.address }),
-          ...(dataProfile.city && { city: dataProfile?.city }),
-          ...(dataProfile.country && { country: dataProfile?.country }),
-          ...(dataProfile.postalCode && {
-            postalCode: dataProfile?.postalCode,
-          }),
-          ...(dataProfile.photo && { photo: dataProfile?.photo }),
+          placeOfBirth: dataProfile?.placeOfBirth
+            ? dataProfile?.placeOfBirth
+            : "",
+          gender: dataProfile?.gender ? dataProfile?.gender : "MALE",
+          religion: dataProfile?.religion ? dataProfile?.religion : "ISLAM",
+          academic: dataProfile?.academic ? dataProfile?.academic : "",
+          title: dataProfile?.title ? dataProfile?.title : "",
+          address: dataProfile?.address ? dataProfile?.address : "",
+          city: dataProfile?.city ? dataProfile?.city : "",
+          country: dataProfile?.country ? dataProfile?.country : "Indonesia",
+          postalCode: dataProfile?.postalCode ? dataProfile?.postalCode : "",
+          photo: base64,
         }
       );
       return next(
@@ -85,5 +111,4 @@ export const edit_me = async (
     const customeError = new CustomError(400, "Raw", "Error", null, error);
     return next(customeError);
   }
-  */
 };

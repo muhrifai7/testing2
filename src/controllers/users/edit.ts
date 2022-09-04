@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { getRepository } from "typeorm";
+import fs from "fs";
 
 import { TU_USER } from "../../typeorm/entities/users/User";
 import { Profile } from "../../typeorm/entities/profile/Profile";
@@ -8,7 +9,6 @@ import { customResult } from "../../utils/response/custom-success/customResult";
 import { Salaries } from "../../typeorm/entities/salaries/Salaries";
 import { Role } from "../../typeorm/entities/roles/Role";
 import { upload_file } from "../../utils/helper";
-import { exit } from "process";
 // edit by id
 export const edit = async (
   req: Request,
@@ -26,7 +26,6 @@ export const edit = async (
     departmentId,
     profile,
     salaries,
-    path = "profile",
   } = req.body;
   let {
     placeOfBirth,
@@ -39,7 +38,6 @@ export const edit = async (
     city,
     country,
     postalCode,
-    photo,
   } = profile;
   const userRepository = getRepository(TU_USER);
   const profileRepositoy = getRepository(Profile);
@@ -123,22 +121,7 @@ export const edit = async (
         : null,
       updated_by: salaries.updated_by ? salaries.updated_by : "Admin",
     };
-    // upload foto
-    let response_upload_file = await upload_file(username, path, photo);
-    console.log(response_upload_file, "response_upload_file");
-    if (response_upload_file?.status != 200) {
-      const customError = new CustomError(
-        404,
-        "Unauthorized",
-        "Failed upload",
-        {
-          code: 403,
-          message: "Images failed upload",
-        }
-      );
-      return next(customError);
-    }
-    let base64: string = response_upload_file?.data;
+
     const newProfile = {
       placeOfBirth: placeOfBirth ? placeOfBirth : "",
       dateOfBirth: dateOfBirth ? dateOfBirth : "",
@@ -150,7 +133,6 @@ export const edit = async (
       city: city ? city : "",
       country: country ? country : "",
       postalCode: postalCode ? postalCode : "",
-      photo: base64 ? base64 : "",
     };
     try {
       await salariesRepository

@@ -14,8 +14,8 @@ import { dbCreateConnection } from "./typeorm/dbCreateConnection";
 
 export const app = express();
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
 app.use(getLanguage);
 
 app.use("/", routes);

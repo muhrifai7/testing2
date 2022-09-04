@@ -48,6 +48,7 @@ export class TU_USER {
 
   @Column({
     nullable: true,
+    unique: true,
   })
   username!: string;
 

@@ -13,10 +13,6 @@ export const list = async (
   const { limit = 10, page = 1, keyword = "" } = req.query;
   const offset = ((limit as number) * ((page as number) - 1)) as number;
   const userRepository = getRepository(TU_USER);
-  // let resss = await userRepository.query(
-  //   "UPDATE salaries set overtime = 7000 where user_id = 91"
-  // );
-  // console.log(resss[1] ? "ddd" : "dddsssss");
   try {
     const [result, count] = await userRepository
       .createQueryBuilder("TU_USER")

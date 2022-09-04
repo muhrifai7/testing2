@@ -45,7 +45,11 @@ router.patch(
 
 router.patch(
   "/me",
-  [checkJwt, checkRole(["ADMINISTRATOR"], true), validatorEdit],
+  [
+    checkJwt,
+    checkRole(["ADMINISTRATOR", "STANDARD", "MANAGER", "STAFF"], true),
+    validatorEdit,
+  ],
   edit_me
 );
 
