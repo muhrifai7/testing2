@@ -20,7 +20,7 @@ export const edit = async (
         404,
         "General",
         `User with id:${id} not found.`,
-        ["User not found."]
+        null
       );
       return next(customError);
     }
