@@ -130,7 +130,7 @@ export class TU_USER {
   @OneToMany(() => Modules, (module) => module.user)
   module!: Modules[];
 
-  @OneToMany(() => Payroll, (payroll) => payroll.id)
+  @OneToMany(() => Payroll, (payroll) => payroll.user)
   payroll!: Payroll[];
 
   // @OneToMany(() => EmailBlast, (email) => email.user)
