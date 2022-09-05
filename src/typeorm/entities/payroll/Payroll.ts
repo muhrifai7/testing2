@@ -165,6 +165,11 @@ export class Payroll {
   })
   deductionPension1!: number;
 
+  @Column({
+    nullable: true,
+  })
+  prefix1!: number;
+
   @Column({ type: "string", nullable: false })
   salaries_id?: string;
   @ManyToOne(() => Salaries, (salaries) => salaries.id, {
