@@ -29,7 +29,7 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
         .offset(offset)
         .limit(limit as number)
         .innerJoinAndSelect("payroll.user", "user")
-        .select(["user.nik", "user.username"]) // added selection
+        // .select(["user.nik", "user.username"]) // added selection
         .where("payroll.paid_date BETWEEN :after AND :before", {
           after: moment(new Date(start_date as string))
             .startOf("month")
