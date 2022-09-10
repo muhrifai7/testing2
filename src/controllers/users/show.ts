@@ -21,6 +21,7 @@ export const show = async (
         "username",
         "isActive",
         "basicSalary",
+        "nik",
       ],
       relations: [
         "profile",

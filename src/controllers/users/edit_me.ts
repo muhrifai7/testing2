@@ -49,7 +49,7 @@ export const edit_me = async (
     try {
       let base64 = dataProfile?.photo;
       let validation_photo = base64.split("/")[0];
-      if (validation_photo != "images") {
+      if (validation_photo != "images" && validation_photo != "") {
         let response_upload_file = await upload_file(username, path, base64);
 
         if (response_upload_file?.status != 200) {
@@ -74,7 +74,7 @@ export const edit_me = async (
         isActive: isActive ? isActive : "",
         role_name: roleName ? roleName : "",
         basicSalary: basicSalary ? basicSalary : "",
-        department_id: departmentId ? departmentId : "",
+        department_id: departmentId ? departmentId : "1",
       });
 
       await profileRepositoy.update(
@@ -99,11 +99,13 @@ export const edit_me = async (
       );
     } catch (err) {
       const customError = new CustomError(
-        409,
-        "Raw",
-        `User '${user.email}' can't be saved.`,
-        null,
-        err
+        404,
+        "General",
+        `User with id:${id} not found.`,
+        {
+          code: 404,
+          message: "User canot be saved.",
+        }
       );
       return next(customError);
     }
